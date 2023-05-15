@@ -1,32 +1,20 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Vendedore $vendedore
- */
-?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Vendedore'), ['action' => 'edit', $vendedore->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Vendedore'), ['action' => 'delete', $vendedore->id], ['confirm' => __('Are you sure you want to delete # {0}?', $vendedore->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Vendedores'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Vendedore'), ['action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="vendedores view large-9 medium-8 columns content">
-    <h3><?= h($vendedore->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('Nome') ?></th>
-            <td><?= h($vendedore->nome) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($vendedore->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Data Cadastro') ?></th>
-            <td><?= h($vendedore->data_cadastro) ?></td>
-        </tr>
-    </table>
+<?= $this->element('bootstrap') ?>
+<div class="container-fluid">
+    <div class="row">
+    <?= $this->element('sidebar') ?>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="panel panel-default">
+                <!-- Panel header -->
+                <div class="panel-heading">
+                    <h3 class="panel-title"><?= h($vendedore->id) ?></h3>
+                </div>
+                <table class="table table-striped" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th scope="row"><?= __('Nome') ?></th>
+                        <td><?= h($vendedore->nome) ?></td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+    </div>
 </div>

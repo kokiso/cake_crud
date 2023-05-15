@@ -11,6 +11,7 @@
                         <th><?= $this->Paginator->sort('quantidade'); ?></th>
                         <th><?= $this->Paginator->sort('preco'); ?></th>
                         <th><?= $this->Paginator->sort('produto_perecivel'); ?></th>
+                        <th><?= $this->Paginator->sort('data_fabricacao'); ?></th>
                         <th><?= $this->Paginator->sort('data_validade'); ?></th>
                         <th class="actions"><?= __('Actions'); ?></th>
                     </tr>
@@ -33,8 +34,17 @@
                             <?php endswitch; 
                         ?>
                         <td>R$<?= $this->Number->format($produto->preco) ?></td>
-                        <td><?= h($produto->produto_perecivel) ?></td>
-                        <td><?= h($produto->data_validade) ?></td>
+                        <?php
+                            switch($this->Number->format(h($produto->produto_perecivel))): 
+                                case 1: ?>
+                                    <td>Sim</td>
+                                <?php break; 
+                                default: ?>
+                                    <td>Não</td>
+                            <?php endswitch; 
+                        ?>
+                        <td><?= h(date("d/m/Y", strtotime($produto->data_fabricacao))) ?></td>
+                        <td><?= h(date("d/m/Y", strtotime($produto->data_validade))) ?></td>
                         <td class="actions">
                             <?= $this->Html->link(
                                 '<span class="fa fa-search"></span><span class="sr-only">' . __('View') . '</span>',

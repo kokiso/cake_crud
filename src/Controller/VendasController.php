@@ -26,89 +26,22 @@ class VendasController extends AppController
 
     public function index()
     {
-        $this->loadModel('Vendas');
-        $this->loadModel('Produtos');
-        $this->loadModel('Vendedores');
-        $this->loadModel('Clientes');
-
+    
         $vendas = $this->Vendas->find()
-            ->select(['Vendas.id', 'Produtos.nome', 'Clientes.nome', 'Vendedores.nome, Vendas.quantidade,Vendas.data_venda'])
-            ->leftJoin(
-                ['Produtos' => 'produtos'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Produtos.id = Vendas.id_produto'
-                        ])
-                    );
-                }
-            )
-            ->leftJoin(
-                ['Vendedores' => 'vendedores'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Vendedores.id = Vendas.id_vendedor'
-                        ])
-                    );
-                }
-            )
-            ->leftJoin(
-                ['Clientes' => 'clientes'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Clientes.id = Vendas.id_cliente'
-                        ])
-                    );
-                }
-            );
+            ->select(['vendas.id', 'produtos.nome', 'clientes.nome', 'vendedores.nome', 'vendas.quantidade', 'vendas.data_venda'])
+            ->from('vendas')
+            ->leftJoin('produtos', ['produtos.id = vendas.id_produto'])
+            ->leftJoin('clientes', ['clientes.id = vendas.id_cliente'])
+            ->leftJoin('vendedores', ['vendedores.id = vendas.id_vendedor'])
+            ->order(['vendas.id' => 'ASC']);
 
-            $minDate = $this->request->getQuery('min_date');
-            $maxDate = $this->request->getQuery('max_date');
-            if (!empty($minDate) && !empty($maxDate)) {
-                $vendas->where([
-                    'Vendas.data_venda BETWEEN :minDate AND :maxDate',
-                    'minDate' => $minDate . ' 00:00:00',
-                    'maxDate' => $maxDate . ' 23:59:59',
-                ]);
-            }
-        
-            $this->paginate = [
-                'limit' => 10,
-                'order' => ['Vendas.id' => 'DESC'],
-                'fields' => ['Vendas.id', 'Produtos.nome', 'Clientes.nome', 'Vendedores.nome, Vendas.quantidade,Vendas.data_venda'],
-                'joins' => [
-                    [
-                        'table' => 'Produtos',
-                        'alias' => 'Produtos',
-                        'type' => 'LEFT',
-                        'conditions' => [
-                            'Produtos.id = Vendas.id_produto'
-                        ]
-                    ],
-                    [
-                        
-                        'table' => 'Clientes',
-                        'alias' => 'Clientes',
-                        'type' => 'LEFT',
-                        'conditions' => [
-                            'Clientes.id = Vendas.id_cliente'
-                        ]
-                    ],
-                    [
-                        
-                        'table' => 'Vendedores',
-                        'alias' => 'Vendedores',
-                        'type' => 'LEFT',
-                        'conditions' => [
-                            'Vendedores.id = Vendas.id_vendedor'
-                        ]
-                    ]
-                ],
-            ];
-            
-            $this->set('vendas', $this->paginate($vendas));
+        $this->paginate = [
+            'limit' => 10,
+            'order' => ['vendas.id' => 'ASC'],
+            'fields' => ['vendas.id','vendedores.nome','clientes.nome','produtos.nome',  'vendas.quantidade', 'vendas.data_venda']
+        ];
+
+        $this->set('vendas', $this->paginate($vendas));
 
     }
 
@@ -120,47 +53,18 @@ class VendasController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
-    {
-        $this->loadModel('Vendas');
-        $this->loadModel('Produtos');
-        $this->loadModel('Vendedores');
-        $this->loadModel('Clientes');
+    {   
 
-        $vendas = $this->Vendas->find()
-            ->select(['Vendas.id', 'Produtos.nome', 'Clientes.nome', 'Vendedores.nome, Vendas.quantidade,Vendas.data_venda'])
-            ->leftJoin(
-                ['Produtos' => 'produtos'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Produtos.id = Vendas.id_produto'
-                        ])
-                    );
-                }
-            )
-            ->leftJoin(
-                ['Vendedores' => 'vendedores'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Vendedores.id = Vendas.id_vendedor'
-                        ])
-                    );
-                }
-            )
-            ->leftJoin(
-                ['Clientes' => 'clientes'],
-                function ($exp, $query) {
-                    return $exp->add(
-                        $exp->and_([
-                            'Clientes.id = Vendas.id_cliente'
-                        ])
-                    );
-                }
-            )->where(['Vendas.id' => $id])
-            ->all();
+        $venda = $this->Vendas->find()
+            ->select(['vendas.id', 'produtos.nome', 'clientes.nome', 'vendedores.nome', 'vendas.quantidade', 'vendas.data_venda'])
+            ->from('vendas')
+            ->leftJoin('produtos', ['produtos.id = vendas.id_produto'])
+            ->leftJoin('clientes', ['clientes.id = vendas.id_cliente'])
+            ->leftJoin('vendedores', ['vendedores.id = vendas.id_vendedor'])
+            ->where('vendas.id',[$id])
+            ->first();
 
-        $this->set('venda', $vendas);
+        $this->set('venda', $venda);
     }
 
     /**
@@ -173,22 +77,17 @@ class VendasController extends AppController
         $this->loadModel('Produtos');
         $this->loadModel('Vendedores');
         $this->loadModel('Clientes');
-        $vendas = $this->Vendas->newEntity();
-        $clientes = $this->Clientes->newEntity();
-        $vendedores = $this->Vendedores->newEntity();
+        $venda = $this->Vendas->newEntity();
         if ($this->request->is('post')) {
-            $vendas = $this->Vendas->patchEntity($vendas, $this->request->getData('Vendas'));
-            $clientes = $this->Clientes->patchEntity($clientes, $this->request->getData('Clientes'));
-            $vendedores = $this->Vendedores->patchEntity($vendedores, $this->request->getData('Vendedores'));
-            if ($this->Vendas->save($vendas) || $this->Clientes->save($clientes) || $this->Vendedores->save($vendedores)) {
+            $venda = $this->Vendas->patchEntity($venda, $this->request->getData());
+            if ($this->Vendas->save($venda)) {
                 $this->Flash->success(__('The venda has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The venda could not be saved. Please, try again.'));
             }
+            $this->Flash->error(__('The venda could not be saved. Please, try again.'));
         }
-        $this->set(compact('vendas','clientes', 'vendedores'));
+        $this->set(compact('venda'));
 
         $VendedoresData = $this->Vendedores->find('list', [
             'keyField' => 'id',
@@ -217,29 +116,23 @@ class VendasController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
-    {
-        $venda = $this->Vendas->get($id, [
-            'contain' => [],
-        ]);
+    {   
         $this->loadModel('Produtos');
         $this->loadModel('Vendedores');
         $this->loadModel('Clientes');
-        $venda = $this->Vendas->newEntity();
-        $clientes = $this->Clientes->newEntity();
-        $vendedores = $this->Vendedores->newEntity();
+        $venda = $this->Vendas->get($id, [
+            'contain' => [],
+        ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $venda = $this->Vendas->patchEntity($vendas, $this->request->getData('Vendas'));
-            $clientes = $this->Clientes->patchEntity($clientes, $this->request->getData('Clientes'));
-            $vendedores = $this->Vendedores->patchEntity($vendedores, $this->request->getData('Vendedores'));
-            if ($this->Vendas->save($venda) || $this->Clientes->save($clientes) || $this->Vendedores->save($vendedores)) {
+            $venda = $this->Vendas->patchEntity($venda, $this->request->getData());
+            if ($this->Vendas->save($venda)) {
                 $this->Flash->success(__('The venda has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The venda could not be saved. Please, try again.'));
             }
+            $this->Flash->error(__('The venda could not be saved. Please, try again.'));
         }
-        $this->set(compact('venda','clientes', 'vendedores'));
+        $this->set(compact('venda'));
 
         $VendedoresData = $this->Vendedores->find('list', [
             'keyField' => 'id',
@@ -278,5 +171,34 @@ class VendasController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function report(){
+
+         $vendas = $this->Vendas->find()
+            ->select(['vendas.id', 'produtos.nome', 'clientes.nome', 'vendedores.nome', 'vendas.quantidade', 'vendas.data_venda'])
+            ->from('vendas')
+            ->leftJoin('produtos', ['produtos.id = vendas.id_produto'])
+            ->leftJoin('clientes', ['clientes.id = vendas.id_cliente'])
+            ->leftJoin('vendedores', ['vendedores.id = vendas.id_vendedor'])
+            ->order(['vendas.id' => 'ASC']);
+
+        $minDate = $this->request->getQuery('min_date');
+        $maxDate = $this->request->getQuery('max_date');
+        if (!empty($minDate) && !empty($maxDate)) {
+            $vendas->where([
+                'Vendas.data_venda BETWEEN :minDate AND :maxDate',
+                'minDate' => $minDate . ' 00:00:00',
+                'maxDate' => $maxDate . ' 23:59:59',
+            ]);
+        }
+        $this->paginate = [
+            'limit' => 10,
+            'order' => ['vendas.id' => 'ASC'],
+            'fields' => ['vendas.id','vendedores.nome','clientes.nome','produtos.nome',  'vendas.quantidade', 'vendas.data_venda']
+        ];
+
+        $this->set('vendas', $this->paginate($vendas));
+       
     }
 }

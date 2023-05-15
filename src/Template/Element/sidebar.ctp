@@ -2,8 +2,10 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
         <li><?= $this->Html->link(__('Produtos'), ['action' => '../produtos/index']) ?> </li>
+        <li><?= $this->Html->link(__('Vendedores'), ['action' => '../vendedores/index']) ?> </li>
+        <li><?= $this->Html->link(__('Clientes'), ['action' => '../clientes/index']) ?> </li>
         <li><?= $this->Html->link(__('Vendas'), ['action' => '../vendas/index']) ?> </li>
-        <!-- <li><?= $this->Html->link(__('Relatório'), ['action' => '../vendas/report']) ?> </li> -->
+        <li><?= $this->Html->link(__('Relatório'), ['action' => '../vendas/report']) ?> </li>
         </ul>
       </div>
     </nav>

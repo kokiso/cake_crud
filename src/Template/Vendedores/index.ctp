@@ -1,49 +1,51 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Vendedore[]|\Cake\Collection\CollectionInterface $vendedores
- */
-?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Vendedore'), ['action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="vendedores index large-9 medium-8 columns content">
-    <h3><?= __('Vendedores') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('nome') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('data_cadastro') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($vendedores as $vendedore): ?>
-            <tr>
-                <td><?= $this->Number->format($vendedore->id) ?></td>
-                <td><?= h($vendedore->nome) ?></td>
-                <td><?= h($vendedore->data_cadastro) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $vendedore->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $vendedore->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $vendedore->id], ['confirm' => __('Are you sure you want to delete # {0}?', $vendedore->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+<?= $this->element('bootstrap') ?>
+<div class="container-fluid">
+    <div class="row">
+    <?= $this->element('sidebar') ?>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <table class="table table-striped" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                    <th scope="col"><?= $this->Paginator->sort('id') ?></th>
+                    <th scope="col"><?= $this->Paginator->sort('nome') ?></th>
+                        <th class="actions"><?= __('Actions'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($vendedores as $vendedore): ?>
+                     <tr>
+                        <td><?= $this->Number->format($vendedore->id) ?></td>
+                        <td><?= h($vendedore->nome) ?></td>
+                        <td class="actions">
+                            <?= $this->Html->link(
+                                '<span class="fa fa-search"></span><span class="sr-only">' . __('View') . '</span>',
+                                ['action' => 'view', $vendedore->id],
+                                ['escape' => false, 'title' => __('View'), 'class' => 'btn btn-info btn-sm']
+                            ) ?>
+                            <?= $this->Html->link(
+                                '<span class="fa fa-eye"></span><span class="sr-only">' . __('Edit') . '</span>',
+                                ['action' => 'edit', $vendedore->id],
+                                ['escape' => false, 'title' => __('Edit'), 'class' => 'btn btn-warning btn-sm']
+                            ) ?>
+                            <?= $this->Form->postLink(
+                                '<span class="fa fa-trash"></span><span class="sr-only">' . __('Delete') . '</span>',
+                                ['action' => 'delete', $vendedore->id],
+                                ['confirm' => __('Are you sure you want to delete # {0}?', $vendedore->id), 'escape' => false, 'title' => __('Delete'), 'class' => 'btn btn-danger btn-sm']
+                            ) ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?= $this->element('create') ?>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->numbers(['before' => '', 'after' => '']) ?>
+                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                </ul>
+                <p><?= $this->Paginator->counter() ?></p>
+            </div>
+        </main>
     </div>
 </div>

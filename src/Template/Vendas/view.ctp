@@ -6,32 +6,32 @@
             <div class="panel panel-default">
                 <!-- Panel header -->
                 <div class="panel-heading">
-                    <h3 class="panel-title"><?= h($venda->id) ?></h3>
+                    <h3 class="panel-title"><?= h($venda->vendas['id']) ?></h3>
                 </div>
                 <table class="table table-striped" cellpadding="0" cellspacing="0">
                     <tr>
                         <td><?= __('Id') ?></td>
-                        <td><?= $this->Number->format($venda->id) ?></td>
+                        <td><?= $this->Number->format($venda->vendas['id']) ?></td>
                     </tr>
                     <tr>
                         <td><?= __('Vendedor') ?></td>
-                        <td><?= h($venda->Vendedores->nome) ?></td>
+                        <td><?= h($venda->vendedores['nome']) ?></td>
                     </tr>
                     <tr>
                         <td><?= __('Cliente') ?></td>
-                        <td><?= h($venda->Clientes->nome) ?></td>
+                        <td><?= h($venda->clientes['nome']) ?></td>
                     </tr>
                     <tr>
                         <td><?= __('Produto') ?></td>
-                        <td><?= h($venda->Produtos->nome) ?></td>
+                        <td><?= h($venda->produtos['nome']) ?></td>
                     </tr>
                     <tr>
                         <td><?= __('Quantidade') ?></td>
-                        <td><?= h($venda->quantidade) ?></td>
+                        <td><?= h($venda->vendas['quantidade']) ?></td>
                     </tr>
                     <tr>
                         <td><?= __('Data de venda') ?></td>
-                        <td><?= h($produto->data_venda) ?></td>
+                        <td><?= h(date("d/m/Y", strtotime($venda->vendas['data_venda']))) ?></td>
                     </tr>
                 </table>
             </div>

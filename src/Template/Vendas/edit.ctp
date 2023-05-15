@@ -3,34 +3,22 @@
     <div class="row">
     <?= $this->element('sidebar') ?>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <?= $this->Form->create($vendas); ?>
+            <?= $this->Form->create($venda); ?>
                 <fieldset>
-                    <legend><?= __('Add {0}', ['Vendas']) ?></legend>
+                    <legend><?= __('Edit {0}', ['Vendas']) ?></legend>
                     <?php
                     echo $this->Form->control('Vendas.id_cliente', [
-                        'options' => $vendedoresData,
-                        'empty' => true,
-                        'required' => false
-                    ]); 
-
-                    echo $this->Form->control('Clientes.nome', [
-                            'label' => __('Novo Cliente'),
-                            'type' => 'text',
-                            'empty' => true,
-                            'required' => false
-                        ]);
-                    echo $this->Form->control('Vendas.id_vendedor', [
                         'options' => $clientesData,
                         'empty' => true,
                         'required' => false
                     ]); 
 
-                    echo $this->Form->control('Vendedores.nome', [
-                            'label' => __('Novo Vendedor'),
-                            'type' => 'text',
-                            'empty' => true,
-                            'required' => false
-                        ]);
+                    echo $this->Form->control('Vendas.id_vendedor', [
+                        'options' => $vendedoresData,
+                        'empty' => true,
+                        'required' => false
+                    ]); 
+                    
                     echo $this->Form->control('Vendas.id_produto', [
                         'options' => $produtosData,
                         'empty' => 'Select an option'
